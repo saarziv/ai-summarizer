@@ -1,0 +1,62 @@
+xversion: '3.8'
+
+services:
+  postgres:
+    image: ankane/pgvector
+    container_name: my-postgres
+    environment:
+      POSTGRES_USER: ${AI_SUMMRIZER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AI_SUMMRIZER_POSTGRES_PASS}
+      POSTGRES_DB: summaries_db
+    ports:
+      - "5432:5432"
+  kafka:
+      image: bitnamilegacy/kafka
+      container_name: kafka
+      environment:
+        KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+        KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+        KAFKA_KRAFT_CLUSTER_ID: kraft-cluster-1
+        ALLOW_PLAINTEXT_LISTENER: "yes"
+        KAFKA_CFG_NODE_ID: 1
+        KAFKA_CFG_PROCESS_ROLES: broker,controller
+        KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+        KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      ports:
+        - "9092:9092"
+        - "9093:9093"
+
+  summarizer-service:
+    build:
+      context: .
+      dockerfile: apps/summarizer-service/Dockerfile
+    container_name: summarizer-service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USERNAME: ${AI_SUMMRIZER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AI_SUMMRIZER_POSTGRES_PASS}
+      POSTGRES_DATABASE: summaries_db
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 9092
+    ports:
+      - "3000:3000"
+    restart: on-failure
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: apps/ai-service/Dockerfile
+    container_name: ai-service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 9092
+      OPEN_ROUTER_API_KEY: ${OPENROUTER_API_KEY}
+    restart: on-failure
+
+

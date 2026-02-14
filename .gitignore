@@ -1,16 +1,39 @@
-# Nx cache
+# Dependencies
+node_modules/
+
+# Nx
 .nx/cache
 .nx/workspace-data
 
-# Build output
+# Build & output
 dist/
 tmp/
 out-tsc/
+build/
+*.tsbuildinfo
 
-# Node dependencies
-node_modules/
+# Environment & secrets (never commit to public repo)
+.env
+.env.*
+!.env.example
+*.env.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*secret*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.yaml
+*-secret*.yaml
 
-# IDEs and editors
+# Cursor IDE (local state, cache, project data)
+.cursor/
+
+# IDEs & editors
 .idea/
 .project
 .classpath
@@ -19,38 +42,36 @@ node_modules/
 .settings/
 *.sublime-workspace
 
-# VS Code
+# VS Code (keep shared config if desired)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs & debug
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
 # Testing
-/coverage/
+coverage/
+.nyc_output/
 test-output/
 testem.log
+*.lcov
 
 # Misc
 .sass-cache/
 libpeerconnection.log
-/connect.lock
-/typings/
-
-# Environment files (optional: only if you have sensitive data in them)
-*.env
-.env
-.env.*.local
-.env.local
-*secret.yaml
-*docker-run-cmd*
+connect.lock
+typings/
+*.local
+docker-run-cmd.txt

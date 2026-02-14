@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/summarizer-service-e2e"
+    },
+    {
+      "path": "./apps/summarizer-service"
+    },
+    {
+      "path": "./apps/ai-service-e2e"
+    },
+    {
+      "path": "./apps/ai-service"
+    }
+  ]
+}

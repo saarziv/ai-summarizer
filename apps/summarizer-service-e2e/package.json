@@ -1,0 +1,32 @@
+{
+  "name": "@warmup/summarizer-service-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@warmup/summarizer-service"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/summarizer-service-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@warmup/summarizer-service:build",
+          "@warmup/summarizer-service:serve"
+        ]
+      }
+    }
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
+}
