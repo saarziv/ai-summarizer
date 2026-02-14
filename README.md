@@ -16,16 +16,32 @@ A lightweight Node.js backend that provides a **REST API for AI-powered text sum
 ---
 
 
-## Architecture (existing)
+## Architecture
 
-The project is a **monorepo event-driven microservices** setup:
+This project uses an **event-driven microservices** architecture. Services communicate asynchronously via **Kafka** as the message broker, and **PostgreSQL** is the primary data store for persistent data.
 
-| Service | Role |
-|--------|------|
-| **summarizer-service** | Exposes the REST APIs for summaries, stores summaries and indexed context documents. |
-| **ai-service** | Holds the logic for calling LLMs: Jina for embeddings, LLM for summarization (including with context). |
+### Event-driven flow
 
-The microservices communicate via a **Kafka** message broker.
+- Clients talk only to **summarizer-service** (REST API). Work is offloaded by publishing events to Kafka.
+- **ai-service** consumes events from Kafka, calls LLMs and embeddings, then publishes results back.
+- **summarizer-service** consumes result events and writes to PostgreSQL; clients fetch results via the REST API.
+
+### Message broker: Kafka
+
+- **Kafka** is the central message broker. It decouples the API from the AI workload, so the API can return quickly (e.g. with a UUID) while processing runs in the background.
+- Topics (e.g. summarization requests and results) are used to coordinate between the summarizer and AI services.
+
+### Data store: PostgreSQL
+
+- **PostgreSQL** holds all persistent data: generated summaries, indexed documents (for context-aware summarization), and related metadata.
+- The summarizer-service is the only service that reads from and writes to the database.
+
+### Service responsibilities
+
+| Service | Responsibility |
+|--------|----------------|
+| **summarizer-service** | **REST API & persistence.** Exposes all HTTP endpoints, publishes work to Kafka, consumes result events from Kafka, and persists (and serves) summaries and indexed documents in **PostgreSQL**. |
+| **ai-service** | **AI & embeddings.** Consumes requests from Kafka, calls **Jina** for embeddings and the LLM for summarization (with or without context). Publishes results back to Kafka; does not serve HTTP or write to the DB. |
 
 ---
 
