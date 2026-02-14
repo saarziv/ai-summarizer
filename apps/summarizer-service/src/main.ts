@@ -39,8 +39,10 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('The API description')
+    .setTitle('AI Summarizer API')
+    .setDescription(
+      'REST API for AI-powered summarization. Submit text to be summarized (async), index documents for context-aware summaries, and retrieve results by UUID. Processing is asynchronous via Kafka.',
+    )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
