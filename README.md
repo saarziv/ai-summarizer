@@ -2,16 +2,16 @@
 
 https://github.com/saarziv
 
-Overview : 
-This repository is a lightweight Node JS backend AI summarizer REST API used to experiment with RAG and Chat GPT APIS.
-The architecture is designed as a monorepo event-driven microservices system.
+Overview :  
+This repository is a lightweight Node JS backend AI summarizer REST API used to experiment with RAG and Chat GPT APIS.  
+The architecture is designed as a monorepo event-driven microservices system.  
 Microservices: 
-summarizer-service:
-  Has the REST API's for the summaries
-  Stores the summaries and context documents submitted.
-ai-service:
-  Contains the logic of calling LLMs.
-  Using JINA for embeddings and summarizing with context.
+summarizer-service:  
+  Has the REST API's for the summaries  
+  Stores the summaries and context documents submitted.  
+ai-service:  
+  Contains the logic of calling LLMs.  
+  Using JINA for embeddings and summarizing with context.  
 The microservices communicate via kafka message broker.
 
 
